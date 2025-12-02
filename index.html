@@ -28,16 +28,15 @@
   </nav>
 
 <section id="home" class="hero-section">
-  <div id="heroCarousel" class="carousel slide" data-ride="carousel" data-interval="1000">
-    </div>
+  <div id="heroSlider" class="carousel slide carousel-fade" data-bs-ride="carousel">
     
     <div class="carousel-inner">
       
       <div class="carousel-item active">
         <img src="slide1.jpg" class="d-block w-100" alt="Slide 1">
         <div class="carousel-caption">
-          <h1>Knowledge Seekers</h1>
-          <p>Empowering Progress Through Technology</p>
+          <h1>Empowering Progress Through Technology</h1>
+          <p>Learn modern digital skills and start your professional journey.</p>
         </div>
       </div>
       
@@ -156,6 +155,74 @@
       </ul>
     </div>
   </section>
+<section id="testimonials" class="t-section">
+    <div class="t-container">
+        <h2>What Our Students Say</h2>
+        
+        <!-- DISPLAY LIVE TESTIMONIALS HERE -->
+        <div id="liveTestimonials" class="testimonial-grid">
+            
+            <!-- STATIC EXAMPLE TESTIMONIAL 1 (Loaded by default) -->
+            <div class="testimonial-card">
+                <p>"The Web Development Bootcamp was intense, but incredibly rewarding. I landed my first job as a front-end developer just two weeks after finishing the course. Highly recommend!"</p>
+                <div class="student-info">
+                    <h4>— Alex J.</h4>
+                    <p>Web Development Bootcamp</p>
+                </div>
+            </div>
+
+            <!-- STATIC EXAMPLE TESTIMONIAL 2 (Loaded by default) -->
+            <div class="testimonial-card">
+                <p>"The UX/UI Design Masterclass completely changed how I approach problem-solving. The instructors are knowledgeable, and the hands-on projects were invaluable."</p>
+                <div class="student-info">
+                    <h4>— Samantha C.</h4>
+                    <p>UX/UI Design Masterclass</p>
+                </div>
+            </div>
+
+            <!-- STATIC EXAMPLE TESTIMONIAL 3 (Loaded by default) -->
+            <div class="testimonial-card">
+                <p>"Data Science Fundamentals gave me the Python and statistical skills I needed to pivot my career. The live support made complex topics easy to grasp."</p>
+                <div class="student-info">
+                    <h4>— Michael L.</h4>
+                    <p>Data Science Fundamentals</p>
+                </div>
+            </div>
+            
+            <!-- Real-time testimonials from Firestore will replace or augment these when they load -->
+            
+        </div>
+
+        <h2 class="form-title">Share Your Experience</h2>
+
+        <!-- SUBMISSION FORM -->
+        <div class="submission-area">
+            <form id="testimonialForm" class="t-form">
+                <input type="text" id="name" placeholder="Your Name" required>
+                
+                <!-- UPDATED: Course is now a dropdown menu -->
+                <select id="course" required>
+                    <option value="" disabled selected>Select the Course/Program you took</option>
+                    <option value="Web Development Bootcamp">Web Development Bootcamp</option>
+                    <option value="Data Science Fundamentals">Data Science Fundamentals</option>
+                    <option value="Cloud Engineering Certification">Cloud Engineering Certification</option>
+                    <option value="UX/UI Design Masterclass">UX/UI Design Masterclass</option>
+                    <option value="Digital Marketing Strategy">Digital Marketing Strategy</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <textarea id="feedback" placeholder="Your Testimonial (max 300 characters)" maxlength="300" rows="4" required></textarea>
+                <button type="submit" id="submitBtn">
+                    Submit Testimonial
+                </button>
+                <p id="responseMessage" class="response-message"></p>
+                <p class="user-id-display">
+                    Your User ID: <span id="userIdDisplay" class="font-mono text-sm">Loading...</span>
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
 
     <section id="contact" class="section-padding bg-light fade-in">
     <div class="container">
@@ -197,10 +264,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="app.js"></script> 
+  <script src="js/app.js"></script> 
 </body>
-
 </html>
-
-
-
