@@ -224,3 +224,180 @@ body {
 .course-card a:hover h4 {
     text-decoration: underline; /* subtle hover effect */
 }
+/* CSS for Testimonials and Form - Fully Responsive */
+.t-section {
+    padding: 60px 20px;
+    background-color: #f8f9fa; 
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+}
+
+.t-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.t-section h2 {
+    color: #343a40;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.testimonial-grid {
+    display: grid;
+    /* Default: 1 column on small screens */
+    grid-template-columns: 1fr; 
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+/* Tablet and Desktop Responsiveness */
+@media (min-width: 768px) {
+    .testimonial-grid {
+        /* On tablets: 2 columns */
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+@media (min-width: 1024px) {
+    .testimonial-grid {
+        /* On desktop: 3 columns */
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+.testimonial-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: left;
+    height: auto; /* Ensure dynamic height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.testimonial-card p {
+    font-size: 1.05em;
+    font-style: italic;
+    color: #495057;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.student-info h4 {
+    margin: 0;
+    color: #007bff; /* Primary brand color */
+    font-weight: 600;
+}
+
+.student-info p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #6c757d;
+    font-style: normal;
+}
+
+/* Placeholder card for initial load */
+.placeholder-card {
+    opacity: 0.6;
+}
+
+/* Submission Form Styles */
+.form-title {
+    margin-top: 20px;
+}
+
+.submission-area {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.t-form {
+    width: 100%;
+    max-width: 600px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+/* Updated to include select for consistent styling */
+.t-form input[type="text"], 
+.t-form textarea,
+.t-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.3s;
+    appearance: none; /* Remove default system styling for better control */
+    background-color: white;
+}
+
+/* Updated to include select for consistent styling */
+.t-form input[type="text"]:focus, 
+.t-form textarea:focus,
+.t-form select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.t-form textarea {
+    resize: vertical;
+}
+
+#submitBtn {
+    background-color: #28a745; /* Success Green */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.1s;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+#submitBtn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+#submitBtn:active {
+    transform: translateY(0);
+}
+
+.response-message {
+    margin-top: 15px;
+    font-weight: 600;
+    color: #dc3545;
+}
+
+.user-id-display {
+    margin-top: 20px;
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+.user-id-display .font-mono {
+    font-family: monospace;
+    display: block;
+    word-break: break-all;
+    background: #eee;
+    padding: 5px;
+    border-radius: 4px;
+}
