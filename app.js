@@ -43,4 +43,178 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+// --- GLOBAL VARIABLES ---
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+if (!firebaseConfig) {
+    console.error("Firebase configuration is missing. Cannot initialize Firestore.");
+}
+
+// --- FIREBASE INITIALIZATION & AUTH ---
+let db;
+let auth;
+let currentUserId = null;
+
+if (firebaseConfig) {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    auth = getAuth(app);
+    console.log("Firebase initialized.");
+    
+    // Auth function
+    const authenticateUser = async () => {
+        try {
+            if (initialAuthToken) {
+                await signInWithCustomToken(auth, initialAuthToken);
+            } else {
+                await signInAnonymously(auth);
+            }
+        } catch (error) {
+            console.error("Firebase authentication failed:", error);
+        }
+    };
+
+    // Listen for auth state change
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUserId = user.uid;
+            document.getElementById('userIdDisplay').textContent = currentUserId;
+            setupRealtimeTestimonials();
+            console.log("User authenticated:", currentUserId);
+        } else {
+            console.log("User signed out or anonymous sign-in failed.");
+            // Try to sign in if not authenticated
+            authenticateUser();
+        }
+    });
+}
+
+
+// --- FORM SUBMISSION LOGIC ---
+
+const form = document.getElementById('testimonialForm');
+const responseMessage = document.getElementById('responseMessage');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!db || !currentUserId) {
+        responseMessage.textContent = "Error: Database not ready or user not authenticated.";
+        return;
+    }
+
+    const name = document.getElementById('name').value.trim();
+    // Getting value from the new select element
+    const course = document.getElementById('course').value.trim();
+    const feedback = document.getElementById('feedback').value.trim();
+
+    if (course === "") {
+        responseMessage.textContent = "Please select a course.";
+        return;
+    }
+
+    if (feedback.length > 300) {
+        responseMessage.textContent = "Testimonial is too long (max 300 characters).";
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
+    responseMessage.textContent = "";
+
+    try {
+        // Path: /artifacts/{appId}/public/data/testimonials
+        const testimonialsCollectionPath = `artifacts/${appId}/public/data/testimonials`;
+        
+        await addDoc(collection(db, testimonialsCollectionPath), {
+            name: name,
+            course: course,
+            feedback: feedback,
+            userId: currentUserId,
+            timestamp: serverTimestamp()
+        });
+
+        responseMessage.style.color = '#28a745';
+        responseMessage.textContent = "Thank you! Your testimonial has been submitted and is now live!";
+        form.reset();
+
+    } catch (error) {
+        responseMessage.style.color = '#dc3545';
+        responseMessage.textContent = "Submission failed. Please try again.";
+        console.error("Error submitting testimonial:", error);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Testimonial";
+    }
+});
+
+
+// --- REAL-TIME DISPLAY LOGIC ---
+
+const liveTestimonialsContainer = document.getElementById('liveTestimonials');
+
+function createTestimonialHTML(data) {
+    const card = document.createElement('div');
+    card.className = 'testimonial-card';
+    card.innerHTML = `
+        <p>"${data.feedback}"</p>
+        <div class="student-info">
+            <h4>— ${data.name}</h4>
+            <p>${data.course}</p>
+        </div>
+    `;
+    return card;
+}
+
+function setupRealtimeTestimonials() {
+    // Stop the function if the database isn't ready
+    if (!db) return;
+
+    // Path: /artifacts/{appId}/public/data/testimonials
+    const testimonialsCollectionPath = `artifacts/${appId}/public/data/testimonials`;
+    const q = query(collection(db, testimonialsCollectionPath));
+
+    onSnapshot(q, (snapshot) => {
+        // Clear existing static testimonials
+        liveTestimonialsContainer.innerHTML = ''; 
+
+        // Check if there are any documents
+        if (snapshot.empty) {
+            // If no documents, add a placeholder message
+            liveTestimonialsContainer.innerHTML = '<p class="text-center w-full">No testimonials yet. Be the first to submit!</p>';
+            return;
+        }
+
+        const cards = [];
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            cards.push(data);
+        });
+
+        // Sort by timestamp (newest first). Note: Firestore orderBy() is better but sorting in JS avoids indexing issues.
+        cards.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+        // Display the cards
+        cards.forEach(data => {
+            liveTestimonialsContainer.appendChild(createTestimonialHTML(data));
+        });
+
+    }, (error) => {
+        console.error("Error setting up real-time listener:", error);
+        liveTestimonialsContainer.innerHTML = '<p class="text-center w-full" style="color:#dc3545;">Failed to load testimonials. Check console for details.</p>';
+    });
+}
+
+// Initial call to start the auth process which triggers testimonial loading
+if (auth && db) {
+    authenticateUser();
+}
+
 });
